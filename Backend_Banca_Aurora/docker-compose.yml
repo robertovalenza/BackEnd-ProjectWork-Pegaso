@@ -1,0 +1,37 @@
+﻿services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: loan
+      POSTGRES_PASSWORD: loanpwd
+      POSTGRES_DB: loandb
+    ports: ["5432:5432"]
+    volumes: [dbdata:/var/lib/postgresql/data]
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    command: ["start-dev","--import-realm"]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports: ["8080:8080"]
+    volumes:
+      - ./Keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Postgres: Host=db;Port=5432;Username=loan;Password=loanpwd;Database=loandb
+      Auth__Authority: http://keycloak:8080/realms/loan-realm
+      Auth__Audience: loan-api
+      Auth__ClientId: loan-api
+      Auth__ClientSecret: loan-api-secret
+    ports: ["5199:8080"]
+    depends_on: [db, keycloak]
+
+volumes:
+  dbdata:
+

@@ -1,0 +1,32 @@
+﻿{
+"realm": "loan-realm",
+"enabled": true,
+"users": [
+{
+"username": "mario",
+"enabled": true,
+"emailVerified": true,
+"email": "mario@example.com",
+"credentials": [{ "type": "password", "value": "password", "temporary": false }]
+}
+],
+"clients": [
+{
+"clientId": "loan-web",
+"publicClient": true,
+"redirectUris": ["*"],
+"webOrigins": ["*"]
+},
+{
+"clientId": "loan-api",
+"secret": "loan-api-secret",
+"serviceAccountsEnabled": true,
+"bearerOnly": false,
+"publicClient": false,
+"standardFlowEnabled": false,
+"directAccessGrantsEnabled": true,
+"authorizationServicesEnabled": false,
+"redirectUris": ["*"]
+}
+]
+}
